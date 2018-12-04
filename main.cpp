@@ -2,6 +2,11 @@
 
 using namespace std;
 
+struct Point2D
+{
+    int x, y;
+}
+
 int main()
 {
     int num;
