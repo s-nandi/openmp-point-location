@@ -7,29 +7,24 @@
 
 struct timer
 {
-    using Clock = std::chrono::steady_clock;
+    using Clock = std::chrono::high_resolution_clock;
     using Time = std::chrono::time_point<Clock>;
     using Duration = std::chrono::milliseconds;
 
     Time start_time, end_time;
+    const std::string message;
 
-    void tick()
-    {
-        start_time = Clock::now();
-    }
+    timer(const std::string &m = "") : start_time(Clock::now()), message(m) {}
 
-    int tock()
+    ~timer()
     {
-        end_time = Clock::now();
+	end_time = Clock::now();
         Duration d = std::chrono::duration_cast<Duration>(end_time - start_time);
-        return d.count();
-    }
-
-    int tock(const std::string &s)
-    {
-        int duration = tock();
-        printf("Time taken for %s : %d ms \n", s.c_str(), duration);
-        return duration;
+        int time_taken = d.count();
+	if (message.empty())
+	    printf("Time taken: %d ms\n", time_taken);
+	else
+	    printf("Time taken for %s : %d ms\n", message.c_str(), time_taken);
     }
 };
 
