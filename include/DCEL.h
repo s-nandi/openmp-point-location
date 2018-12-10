@@ -36,7 +36,7 @@ private:
     void matchTwinEdges(std::vector <endpoint_indices> &created_edges, std::vector <endpoint_indices> &twinless_edges);
     void buildExterior(std::vector <endpoint_indices> &twinless_edges);
 public:
-    void buildFromTriangles(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
+    DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     ~DCEL();
 };
 

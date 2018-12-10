@@ -4,9 +4,15 @@
 #include "face.h"
 #include "sort.h"
 
-#include <iostream>
-#include <random>
-#include <algorithm>
+DCEL::DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
+{
+    createPointSet(points);
+    std::vector <endpoint_indices> created_edges; // Used to detect twin half-edges after sorting
+    buildFaces(triangles, created_edges);
+    std::vector <endpoint_indices> twinless_edges; // Boundary edges are half-edges without twins
+    matchTwinEdges(created_edges, twinless_edges);
+    buildExterior(twinless_edges);
+}
 
 DCEL::~DCEL()
 {
@@ -37,16 +43,6 @@ face* DCEL::getNewFace(int id)
     face* new_face = new face(id ? id : faces.size());
     faces.push_back(new_face);
     return new_face;
-}
-
-void DCEL::buildFromTriangles(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
-{
-    createPointSet(points);
-    std::vector <endpoint_indices> created_edges; // Used to detect twin half-edges after sorting
-    buildFaces(triangles, created_edges);
-    std::vector <endpoint_indices> twinless_edges; // Boundary edges are half-edges without twins
-    matchTwinEdges(created_edges, twinless_edges);
-    buildExterior(twinless_edges);
 }
 
 void DCEL::createPointSet(std::vector <pt> &points)
