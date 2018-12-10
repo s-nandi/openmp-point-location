@@ -37,6 +37,7 @@ private:
     void buildExterior(std::vector <endpoint_indices> &twinless_edges);
 public:
     void buildFromTriangles(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
+    ~DCEL();
 };
 
 #endif // DCEL_H_DEFINED

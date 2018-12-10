@@ -1,4 +1,4 @@
-#include "dcel.h"
+#include "DCEL.h"
 #include "vertex.h"
 #include "halfedge.h"
 #include "face.h"
@@ -7,6 +7,16 @@
 #include <iostream>
 #include <random>
 #include <algorithm>
+
+DCEL::~DCEL()
+{
+    for (auto &f: faces)
+	delete f;
+    for (auto &v: vertices)
+	delete v;
+    for (auto &e: edges)
+	delete e;
+}
 
 vertex* DCEL::getNewVertex(pt &point)
 {
