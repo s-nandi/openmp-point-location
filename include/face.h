@@ -1,9 +1,11 @@
 #ifndef FACE_H
 #define FACE_H
 
-#include <iostream>
 #include <vector>
-#include "halfedge.h"
+
+struct pt;
+struct vertex;
+struct halfedge;
 
 struct face
 {

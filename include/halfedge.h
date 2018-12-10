@@ -1,8 +1,6 @@
 #ifndef HALFEDGE_DEFINED
 #define HALFEDGE_DEFINED
 
-#include "pt.h"
-
 struct vertex;
 struct face;
 
