@@ -1,7 +1,9 @@
+
 #ifndef DCEL_H_DEFINED
 #define DCEL_H_DEFINED
 
 #include <vector>
+#include <algorithm>
 #include "pt.h"
 
 struct face;
