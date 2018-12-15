@@ -38,8 +38,11 @@ private:
     void matchTwinEdges(std::vector <endpoint_indices> &created_edges, std::vector <endpoint_indices> &twinless_edges);
     void buildExterior(std::vector <endpoint_indices> &twinless_edges);
 public:
+    DCEL(){}
     DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
+    void make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     ~DCEL();
+    int locate(const pt &point);
 };
 
 #endif // DCEL_H_DEFINED

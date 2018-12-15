@@ -5,7 +5,7 @@
 
 std::vector <halfedge*> face::getEdges() const
 {
-    auto firstEdge = startEdge, currEdge = firstEdge;
+    auto firstEdge = startEdge, currEdge = startEdge;
     std::vector <halfedge*> res;
     do
     {

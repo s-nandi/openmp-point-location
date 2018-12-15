@@ -9,9 +9,9 @@ struct face;
 
 struct halfedge
 {
-    vertex *origin;
-    halfedge *twin = nullptr, *next, *prev;
-    face *incidentFace;
+    vertex *origin = nullptr;
+    halfedge *twin = nullptr, *next = nullptr, *prev = nullptr;
+    face *incidentFace = nullptr;
 
     vertex* destination() const;
     void setIncidentFace(face* &f);

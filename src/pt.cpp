@@ -1,5 +1,8 @@
 #include "pt.h"
 
+#include <iostream>
+using namespace std;
+
 const float EPS = 1e-5;
 
 /*
@@ -85,7 +88,7 @@ bool pt::intersects(const pt &p1, const pt &q1, const pt &p2, const pt &q2)
 }
 
 bool pt::contains(const std::vector <pt> &polygon, const pt &point)
-{
+{   
     bool leftTurn = false;
     bool rightTurn = false;
     int sz = polygon.size();

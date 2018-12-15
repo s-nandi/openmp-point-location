@@ -5,14 +5,26 @@
 #include "sort.h"
 #include <assert.h>
 
+#include <iostream>
+using namespace std;
+
 DCEL::DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
 {
+    make_DCEL(points, triangles);
+}
+
+void DCEL::make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
+{
+    assert(vertices.empty() and faces.empty() and edges.empty());
+    
     createPointSet(points);
     std::vector <endpoint_indices> created_edges; // Used to detect twin half-edges after sorting
     buildFaces(triangles, created_edges);
     std::vector <endpoint_indices> twinless_edges; // Boundary edges are half-edges without twins
     matchTwinEdges(created_edges, twinless_edges);
     buildExterior(twinless_edges);
+
+    assert(vertices.size() == points.size());
 }
 
 DCEL::~DCEL()
@@ -138,4 +150,32 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
 	currEdge = exterior_edges[endIndex];
     }
     while (currEdge != firstEdge);
+}
+
+int DCEL::locate(const pt &point)
+{
+    assert(faces.size() > 0);
+    face* curr_face = faces[0];
+    assert(curr_face -> index >= 0);
+
+    while (true)
+    {
+	face* next_face = nullptr;
+	std::pair <pt, pt> ray = {curr_face -> getCentroid(), point};
+	auto edges = curr_face -> getEdges();
+	for (halfedge* e: edges)
+	{
+	    auto endpoints = e -> getEndpoints();
+	    if (pt::intersects(ray.first, ray.second, endpoints.first, endpoints.second))
+	    {
+		next_face = e -> twin -> incidentFace;
+	    }
+	}
+	if (!next_face)
+	    break;
+	curr_face = next_face;
+	if (curr_face -> index < 0)
+	    break;
+    }
+    return curr_face -> index;
 }

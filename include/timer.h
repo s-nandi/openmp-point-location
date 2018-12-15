@@ -1,7 +1,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#include <stdio.h>
+#include <iostream>
 #include <chrono>
 #include <string>
 
@@ -22,9 +22,9 @@ struct timer
         Duration d = std::chrono::duration_cast<Duration>(end_time - start_time);
         int time_taken = d.count();
 	if (message.empty())
-	    printf("Time taken: %d ms\n", time_taken);
+	    std::cout << "Time taken: " << time_taken << " ms" << std::endl;
 	else
-	    printf("Time taken for %s : %d ms\n", message.c_str(), time_taken);
+	    std::cout << "Time taken for " << message << " : " << time_taken << " ms" << std::endl;
     }
 };
 
