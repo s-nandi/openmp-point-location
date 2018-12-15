@@ -3,6 +3,7 @@
 #include "halfedge.h"
 #include "face.h"
 #include "sort.h"
+#include <assert.h>
 
 DCEL::DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
 {
@@ -59,7 +60,7 @@ void DCEL::buildFaces(std::vector <std::vector<int>> &triangles, std::vector <en
     {
 	int indices[3] = {triangles[i][0], triangles[i][1], triangles[i][2]};
 
-	auto orient = orientation(vertices[indices[0]] -> point, vertices[indices[1]] -> point, vertices[indices[2]] -> point);
+	auto orient = pt::orientation(vertices[indices[0]] -> point, vertices[indices[1]] -> point, vertices[indices[2]] -> point);
 	if (orient > 0) // Ensure that half edges in a face are ccw oriented
 	{
 	    std::swap(indices[0], indices[2]);
