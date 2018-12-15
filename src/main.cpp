@@ -112,7 +112,7 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
     }
     
     auto queries = make_query_points(N, Q);
-    vector <int> locations(Q);
+    vector <int> sequential_locations(Q), parallel_locations(Q);
 
     if (debug)
     {
@@ -121,14 +121,25 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 	    std::cout << q << std::endl;
     }
 
-    // Timing block
+    // Sequental Location Benchmarking
     {
-	timer stopwatch("Point Location " + to_string(Q));
+	timer stopwatch("Sequential Point Location " + to_string(Q));
 	for (int i = 0; i < Q; i++)
 	{
-	    locations[i] = dcel.locate(queries[i]);
+	    sequential_locations[i] = dcel.sequential_locate(queries[i]);
 	}
     }
+    // Parallel Location Benchmarking
+    {
+	timer stopwatch("Parallel Point Location " + to_string(Q));
+	for (int i = 0; i < Q; i++)
+	{
+	    parallel_locations[i] = dcel.parallel_locate(queries[i]);
+	}
+    }
+
+    for (int i = 0; i < Q; i++)
+	assert(sequential_locations[i] == parallel_locations[i]);
 
     if (!checkCorrectness)
 	return;
@@ -136,14 +147,13 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
     int numOutside = 0, numInside = 0;
     for (int i = 0; i < Q; i++)
     {
-	int located = locations[i];
-	if (located < 0)
+	if (sequential_locations[i] < 0)
 	    numOutside++;
 	else
 	    numInside++;
 	if (debug)
-	    std::cout << "Located " << queries[i] << " in face " << located << std::endl;
-	assert(check_point_in_face(points, faces, queries[i], locations[i]));
+	    std::cout << "Located " << queries[i] << " in face " << sequential_locations[i] << std::endl;
+	assert(check_point_in_face(points, faces, queries[i], sequential_locations[i]));
     }
     std::cout << "Inside: " << numInside << " Outside: " << numOutside << std::endl;
     std::cout << "All tests passed!" << std::endl;
@@ -153,11 +163,7 @@ int main()
 {
     // Check correctness once
     test(10, 10000, true);
-    // Test timing
+    // Then perform benchmarks
     for (int N: {5, 10, 20, 50, 100, 200})
-    {
-	cout << endl;
-	timer stopwatch("Testing " + to_string(N * N));
 	test(N, N * N);
-    }
 }

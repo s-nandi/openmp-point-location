@@ -152,7 +152,35 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
     while (currEdge != firstEdge);
 }
 
-int DCEL::locate(const pt &point)
+int DCEL::sequential_locate(const pt &point)
+{
+    assert(faces.size() > 0);
+    face* curr_face = faces[0];
+    assert(curr_face -> index >= 0);
+
+    while (true)
+    {
+	face* next_face = nullptr;
+	std::pair <pt, pt> ray = {curr_face -> getCentroid(), point};
+	auto edges = curr_face -> getEdges();
+	for (halfedge* e: edges)
+	{
+	    auto endpoints = e -> getEndpoints();
+	    if (pt::intersects(ray.first, ray.second, endpoints.first, endpoints.second))
+	    {
+		next_face = e -> twin -> incidentFace;
+	    }
+	}
+	if (!next_face)
+	    break;
+	curr_face = next_face;
+	if (curr_face -> index < 0)
+	    break;
+    }
+    return curr_face -> index;
+}
+
+int DCEL::parallel_locate(const pt &point)
 {
     assert(faces.size() > 0);
     face* curr_face = faces[0];

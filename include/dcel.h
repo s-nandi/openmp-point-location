@@ -42,7 +42,8 @@ public:
     DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     void make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     ~DCEL();
-    int locate(const pt &point);
+    int sequential_locate(const pt &point);
+    int parallel_locate(const pt &point);
 };
 
 #endif // DCEL_H_DEFINED
