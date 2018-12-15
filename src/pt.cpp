@@ -57,9 +57,20 @@ std::ostream& operator << (std::ostream &os, const pt &p)
     return os << '(' << p.x << ", " << p.y << ')';
 }
 
+ptT pt::dot(const pt &a, const pt &b)
+{
+    return a.x * b.x + a.y * b.y;
+}
+
 ptT pt::cross(const pt &a, const pt &b)
 {
     return a.x * b.y - a.y * b.x;
+}
+
+ptT pt::distance(const pt &a, const pt &b)
+{
+    auto vec = b - a;
+    return vec * vec;
 }
 
 //Returns > 0 if (o, a, b) clockwise, < 0 if counter-clockwise, 0 if collinear
