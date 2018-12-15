@@ -83,3 +83,21 @@ bool pt::intersects(const pt &p1, const pt &q1, const pt &p2, const pt &q2)
            orientation(p1, q1, p2) * orientation(p1, q1, q2) <= 0 and
            orientation(p2, q2, p1) * orientation(p2, q2, q1) <= 0;
 }
+
+bool pt::contains(const std::vector <pt> &polygon, const pt &point)
+{
+    bool leftTurn = false;
+    bool rightTurn = false;
+    int sz = polygon.size();
+    for (int i = 0; i < sz; i++)
+    {
+	int j = (i + 1) % sz;
+	auto orient = orientation(polygon[i], polygon[j], point);
+	if (orient > 0)
+	    rightTurn = true;
+	if (orient < 0)
+	    leftTurn = true;
+    }
+    return !(leftTurn and rightTurn);
+
+}

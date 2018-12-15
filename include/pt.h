@@ -2,6 +2,7 @@
 #define PT_DEFINED
 
 #include <iostream>
+#include <vector>
 
 typedef float ptT;
 struct pt
@@ -23,6 +24,7 @@ struct pt
     static ptT orientation(const pt &o, const pt &a, const pt &b);
     static bool intersect1d(ptT i1, ptT j1, ptT i2, ptT j2);
     static bool intersects(const pt &p1, const pt &q1, const pt &p2, const pt &q2);
+    static bool contains(const std::vector <pt> &polygon, const pt &point);
     friend std::ostream& operator << (std::ostream &os, const pt &p);
 };
 
