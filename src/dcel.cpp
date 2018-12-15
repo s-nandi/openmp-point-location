@@ -5,9 +5,6 @@
 #include "sort.h"
 #include <assert.h>
 
-#include <iostream>
-using namespace std;
-
 DCEL::DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
 {
     make_DCEL(points, triangles);
@@ -180,6 +177,13 @@ int DCEL::sequential_locate(const pt &point)
     return curr_face -> index;
 }
 
+void DCEL::sequential_locations(const std::vector <pt> &points, std::vector <int> &out)
+{
+    int n = points.size();
+    for (int i = 0; i < n; i++)
+	out[i] = sequential_locate(points[i]);
+}
+
 int DCEL::parallel_locate(const pt &point)
 {
     assert(faces.size() > 0);
@@ -206,4 +210,11 @@ int DCEL::parallel_locate(const pt &point)
 	    break;
     }
     return curr_face -> index;
+}
+
+void DCEL::parallel_locations(const std::vector <pt> &points, std::vector <int> &out)
+{
+    int n = points.size();
+    for (int i = 0; i < n; i++)
+	out[i] = parallel_locate(points[i]);
 }

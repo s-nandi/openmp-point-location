@@ -112,7 +112,7 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
     }
     
     auto queries = make_query_points(N, Q);
-    vector <int> sequential_locations(Q), parallel_locations(Q);
+    vector <int> sequential_located(Q), parallel_located(Q);
 
     if (debug)
     {
@@ -124,22 +124,14 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
     // Sequental Location Benchmarking
     {
 	timer stopwatch("Sequential Point Location " + to_string(Q));
-	for (int i = 0; i < Q; i++)
-	{
-	    sequential_locations[i] = dcel.sequential_locate(queries[i]);
-	}
+	dcel.sequential_locations(queries, sequential_located);
     }
     // Parallel Location Benchmarking
     {
 	timer stopwatch("Parallel Point Location " + to_string(Q));
-	for (int i = 0; i < Q; i++)
-	{
-	    parallel_locations[i] = dcel.parallel_locate(queries[i]);
-	}
+	dcel.parallel_locations(queries, parallel_located);
     }
-
-    for (int i = 0; i < Q; i++)
-	assert(sequential_locations[i] == parallel_locations[i]);
+    assert(sequential_located == parallel_located);
 
     if (!checkCorrectness)
 	return;
@@ -147,13 +139,13 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
     int numOutside = 0, numInside = 0;
     for (int i = 0; i < Q; i++)
     {
-	if (sequential_locations[i] < 0)
+	if (sequential_located[i] < 0)
 	    numOutside++;
 	else
 	    numInside++;
 	if (debug)
-	    std::cout << "Located " << queries[i] << " in face " << sequential_locations[i] << std::endl;
-	assert(check_point_in_face(points, faces, queries[i], sequential_locations[i]));
+	    std::cout << "Located " << queries[i] << " in face " << sequential_located[i] << std::endl;
+	assert(check_point_in_face(points, faces, queries[i], sequential_located[i]));
     }
     std::cout << "Inside: " << numInside << " Outside: " << numOutside << std::endl;
     std::cout << "All tests passed!" << std::endl;
