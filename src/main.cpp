@@ -132,6 +132,7 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 	dcel.parallel_locations(queries, parallel_located);
     }
     assert(sequential_located == parallel_located);
+    std::cout << std::endl;
 
     if (!checkCorrectness)
 	return;
@@ -148,7 +149,7 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 	assert(check_point_in_face(points, faces, queries[i], sequential_located[i]));
     }
     std::cout << "Inside: " << numInside << " Outside: " << numOutside << std::endl;
-    std::cout << "All tests passed!" << std::endl;
+    std::cout << "All tests passed!" << std::endl << std::endl;
 }
 
 int main()
