@@ -9,6 +9,7 @@ struct face;
 struct vertex;
 struct halfedge;
 
+typedef std::pair<ptT, int> distance_index_pair;
 class DCEL
 {
 private:  
@@ -23,7 +24,7 @@ private:
         }
     };
 
-    static const int MAX_SAMPLE_SIZE = 10000;
+    static const int MAX_SAMPLE_SIZE = 100000;
     
     std::vector <face*> faces;
     std::vector <vertex*> vertices;
@@ -42,20 +43,20 @@ private:
     void matchTwinEdges(std::vector <endpoint_indices> &created_edges, std::vector <endpoint_indices> &twinless_edges);
     void buildExterior(std::vector <endpoint_indices> &twinless_edges);
 
-    face* sequential_get_closest_face(const pt &point);
-    int sequential_locate(const pt &point);
-    face* parallel_get_closest_face(const pt &point);
-    int parallel_locate(const pt &point);
+    face* sequential_get_closest_face(pt &point);
+    void sequential_locate(pt &point, int &result);
+    face* parallel_get_closest_face(pt &point);
+    void parallel_locate(pt &point, int &result);
+    void hybrid_locate(pt &point, int &result);
 public:
-    int hybrid_locate(const pt &point);
     DCEL(){}
     DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     void make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     ~DCEL();
 
-    void sequential_locations(const std::vector <pt> &points, std::vector <int> &out);
-    void parallel_locations(const std::vector <pt> &points, std::vector <int> &out);
-    void hybrid_locations(const std::vector <pt> &points, std::vector <int> &out);
+    void sequential_locations(std::vector <pt> &points, std::vector <int> &out);
+    void parallel_locations(std::vector <pt> &points, std::vector <int> &out);
+    void hybrid_locations(std::vector <pt> &points, std::vector <int> &out);
 };
 
 #endif // DCEL_H_DEFINED

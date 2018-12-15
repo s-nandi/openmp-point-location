@@ -118,6 +118,15 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 	timer stopwatch("Sequential Point Location " + to_string(Q));
 	dcel.sequential_locations(queries, sequential_located);
     }
+
+    if (debug)
+    {
+	for (int i = 0; i < Q; i++)
+	{
+	    std::cout << "Sequentially located" << queries[i] << " in face " << sequential_located[i] << std::endl;
+	}
+    }
+    
     // Hybrid Location Benchmarking
     {
 	timer stopwatch("Hybrid Point Location " + to_string(Q));
@@ -127,6 +136,18 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
     {
 	timer stopwatch("Parallel Point Location " + to_string(Q));
 	dcel.parallel_locations(queries, parallel_located);
+    }
+
+    if (debug)
+    {
+	if (sequential_located != parallel_located)
+	{
+	    for (int i = 0; i < Q; i++)
+	    {
+		std::cout << "Sequentially located" << queries[i] << " in face " << sequential_located[i] << std::endl;
+		std::cout << "Parallely located" << queries[i] << " in face " << parallel_located[i] << std::endl;
+	    }
+	}
     }
     
     assert(sequential_located == parallel_located and sequential_located == hybrid_located);
@@ -153,8 +174,9 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 int main()
 {
     // Check correctness once
-    test(10, 10000, true);
+    test(10, 100, true);
+    
     // Then perform benchmarks
-    for (int N: {1000, 2000, 5000})
-	test(N, N);
+    for (int N: {100, 200, 300, 400, 500, 600})
+	test(N, N * N);
 }

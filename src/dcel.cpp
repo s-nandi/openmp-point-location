@@ -153,7 +153,7 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
 	faces[i] -> initCentroid();
     }
     numSample = 0;
-    int step = pow(faces.size(), 4.0 / 5.0);
+    int step = pow(faces.size(), 1.0 / 3.0);
     for (int i = 0; i < faces.size(); i += step)
     {
 	assert(numSample < MAX_SAMPLE_SIZE);
@@ -161,3 +161,4 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
 	numSample++;
     }
 }
+

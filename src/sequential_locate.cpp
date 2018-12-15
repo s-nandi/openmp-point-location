@@ -2,51 +2,63 @@
 #include "vertex.h"
 #include "halfedge.h"
 #include "face.h"
+#include <utility>
 
-face* DCEL::sequential_get_closest_face(const pt &point)
+const ptT INF = 1e20;
+
+distance_index_pair seq_pair_min(distance_index_pair a, distance_index_pair b)
 {
-    ptT min_distance = pt::distance2(samplefaces[0] -> centroid, point);
-    face* closest = samplefaces[0];
-    for (int i = 1; i < numSample; i++)
-    {
-	auto possible_distance = pt::distance2(samplefaces[i] -> centroid, point);
-	if (possible_distance < min_distance)
-	{
-	    min_distance = possible_distance;
-	    closest = samplefaces[i];
-	}
-    }
-    return closest;
+    return (a.first < b.first) ? a : b;
 }
 
-int DCEL::sequential_locate(const pt &point)
+face* DCEL::sequential_get_closest_face(pt &point)
 {
-    face* curr_face = sequential_get_closest_face(point);
-    while (true)
-    {
-	face* next_face = nullptr;
-	std::pair <pt, pt> ray = {curr_face -> centroid, point};
-	auto edges = curr_face -> getEdges();
-	for (halfedge* e: edges)
-	{
-	    auto endpoints = e -> getEndpoints();
-	    if (pt::intersects(ray.first, ray.second, endpoints.first, endpoints.second))
-	    {
-		next_face = e -> twin -> incidentFace;
-	    }
-	}
-	if (!next_face)
-	    break;
-	curr_face = next_face;
-	if (curr_face -> index < 0)
-	    break;
-    }
-    return curr_face -> index;
+    distance_index_pair pairs[MAX_SAMPLE_SIZE];
+    for (int i = 0; i < numSample; i++)
+	pairs[i] = {pt::distance2(samplefaces[i] -> centroid, point), i};
+
+    distance_index_pair closest{INF, -1};
+    for (int i = 0; i < numSample; i++)
+	closest = seq_pair_min(closest, pairs[i]);
+    return samplefaces[closest.second];
 }
 
-void DCEL::sequential_locations(const std::vector <pt> &points, std::vector <int> &out)
+void sequential_locate_recursive(face* curr_face, pt &point, int &result)
+{
+    face* next_face = nullptr;
+    std::pair <pt, pt> ray = {curr_face -> centroid, point};
+    auto edges = curr_face -> getEdges();
+    for (halfedge* e: edges)
+    {
+	auto endpoints = e -> getEndpoints();
+	if (pt::intersects(ray.first, ray.second, endpoints.first, endpoints.second))
+	{
+	    next_face = e -> twin -> incidentFace;
+	}
+    }
+    if (!next_face)
+    {
+	result = curr_face -> index;
+    }
+    else if (next_face -> index < 0)
+    {
+	result = -1;
+    }
+    else
+    {
+	sequential_locate_recursive(next_face, point, result);
+    }
+}
+
+void DCEL::sequential_locate(pt &point, int &result)
+{
+    face* start_face = sequential_get_closest_face(point); // remove parallel_get_closest_face if not used
+    sequential_locate_recursive(start_face, point, result);
+}
+
+void DCEL::sequential_locations(std::vector <pt> &points, std::vector <int> &out)
 {
     int n = points.size();
     for (int i = 0; i < n; i++)
-	out[i] = sequential_locate(points[i]);
+	sequential_locate(points[i], out[i]);
 }
