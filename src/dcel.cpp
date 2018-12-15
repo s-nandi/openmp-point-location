@@ -49,7 +49,7 @@ void DCEL::createPointSet(std::vector <pt> &points)
 {
     for (int i = 0; i < points.size(); i++)
     {
-	vertices[i] = getNewVertex(points[i]);
+	getNewVertex(points[i]);
     }
 }
 
