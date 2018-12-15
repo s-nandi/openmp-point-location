@@ -17,7 +17,7 @@ bool check_point_in_face(const point_set &points, const indexed_face_set &faces,
     {
 	for (int i = 0; i < faces.size(); i++)
 	{
-	    if (pointInFace(points, faces, p, i))
+	    if (check_point_in_face(points, faces, p, i))
 		return false;
 	}
 	return true;
