@@ -3,7 +3,7 @@
 #include "vertex.h"
 #include "pt.h"
 
-vertex* halfedge::destination()
+vertex* halfedge::destination() const
 {
     return twin ? twin -> origin : next -> origin;
 }
@@ -30,4 +30,9 @@ void halfedge::setTwin(halfedge* &t)
 {
     twin = t;
     t -> twin = this;
+}
+
+std::pair <pt, pt> halfedge::getEndpoints() const
+{
+    return {origin -> point, destination() -> point};
 }
