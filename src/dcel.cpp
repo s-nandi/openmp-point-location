@@ -1,4 +1,4 @@
-#include "DCEL.h"
+#include "dcel.h"
 #include "vertex.h"
 #include "halfedge.h"
 #include "face.h"
