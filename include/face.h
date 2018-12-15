@@ -19,6 +19,7 @@ struct face
     std::vector <vertex*> getVertices() const;
     std::vector <pt> getPoints() const;
     std::vector <face*> getNeighbors() const;
+    pt getCentroid() const;
 };
 
 #endif
