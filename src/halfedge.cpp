@@ -3,7 +3,7 @@
 #include "vertex.h"
 #include "pt.h"
 
-vertex* halfedge::endpoint()
+vertex* halfedge::destination()
 {
     return twin ? twin -> origin : next -> origin;
 }

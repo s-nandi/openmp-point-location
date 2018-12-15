@@ -121,7 +121,7 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
     {
 	halfedge* reverse_edge = getNewEdge(); // Since twin does not exist in interior, new halfedge must be created on the exterior
 
-	vertex* origin = twinless_edges[i].edge -> endpoint();
+	vertex* origin = twinless_edges[i].edge -> destination();
 	reverse_edge -> setOrigin(origin); // Set origin of exterior edge
 	reverse_edge -> setIncidentFace(exterior);
 	reverse_edge -> setTwin(twinless_edges[i].edge);
@@ -133,7 +133,7 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
     halfedge* currEdge = firstEdge;
     do
     {
-	int endIndex = currEdge -> endpoint() -> index;
+	int endIndex = currEdge -> destination() -> index;
 	currEdge -> setNext(exterior_edges[endIndex]);
 	currEdge = exterior_edges[endIndex];
     }

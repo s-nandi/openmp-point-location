@@ -23,7 +23,7 @@ std::ostream & operator << (std::ostream &os, vertex &v)
     auto edges = v.getEdges();
     for (auto &edge: edges)
     {
-        os << (edge -> endpoint() -> point) << " ";
+        os << (edge -> destination() -> point) << " ";
     }
     return os;
 }
