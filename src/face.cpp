@@ -52,16 +52,15 @@ std::vector <face*> face::getNeighbors() const
     return res;
 }
 
-pt face::getCentroid() const
+void face::initCentroid()
 {
     auto points = getPoints();
-    pt centroid = {0, 0};
+    centroid = {0, 0};
     for (pt &p: points)
     {
 	centroid = centroid + p;
     }
     centroid = centroid / points.size();
-    return centroid;
 }
 
 std::ostream & operator << (std::ostream &os, face &f)

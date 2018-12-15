@@ -22,11 +22,16 @@ private:
             indices = std::minmax(i, j);
         }
     };
+
+    static const int MAX_SAMPLE_SIZE = 10000;
     
     std::vector <face*> faces;
     std::vector <vertex*> vertices;
     std::vector <halfedge*> edges;
     face* exterior;
+
+    int numSample;
+    face* samplefaces[MAX_SAMPLE_SIZE];
 
     vertex* getNewVertex(pt &point);
     halfedge* getNewEdge();
@@ -37,9 +42,12 @@ private:
     void matchTwinEdges(std::vector <endpoint_indices> &created_edges, std::vector <endpoint_indices> &twinless_edges);
     void buildExterior(std::vector <endpoint_indices> &twinless_edges);
 
+    face* sequential_get_closest_face(const pt &point);
     int sequential_locate(const pt &point);
+    face* parallel_get_closest_face(const pt &point);
     int parallel_locate(const pt &point);
 public:
+    int hybrid_locate(const pt &point);
     DCEL(){}
     DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     void make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
@@ -47,6 +55,7 @@ public:
 
     void sequential_locations(const std::vector <pt> &points, std::vector <int> &out);
     void parallel_locations(const std::vector <pt> &points, std::vector <int> &out);
+    void hybrid_locations(const std::vector <pt> &points, std::vector <int> &out);
 };
 
 #endif // DCEL_H_DEFINED

@@ -23,7 +23,7 @@ struct pt
     static ptT dot(const pt &a, const pt &b);
     static ptT cross(const pt &a, const pt &b);
 
-    static ptT distance(const pt &a, const pt &b);
+    static ptT distance2(const pt &a, const pt &b);
     static ptT orientation(const pt &o, const pt &a, const pt &b);
     static bool intersect1d(ptT i1, ptT j1, ptT i2, ptT j2);
     static bool intersects(const pt &p1, const pt &q1, const pt &p2, const pt &q2);

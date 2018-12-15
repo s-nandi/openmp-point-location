@@ -147,74 +147,17 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
 	currEdge = exterior_edges[endIndex];
     }
     while (currEdge != firstEdge);
-}
 
-int DCEL::sequential_locate(const pt &point)
-{
-    assert(faces.size() > 0);
-    face* curr_face = faces[0];
-    assert(curr_face -> index >= 0);
-
-    while (true)
+    for (int i = 0; i < faces.size() - 1; i++)
     {
-	face* next_face = nullptr;
-	std::pair <pt, pt> ray = {curr_face -> getCentroid(), point};
-	auto edges = curr_face -> getEdges();
-	for (halfedge* e: edges)
-	{
-	    auto endpoints = e -> getEndpoints();
-	    if (pt::intersects(ray.first, ray.second, endpoints.first, endpoints.second))
-	    {
-		next_face = e -> twin -> incidentFace;
-	    }
-	}
-	if (!next_face)
-	    break;
-	curr_face = next_face;
-	if (curr_face -> index < 0)
-	    break;
+	faces[i] -> initCentroid();
     }
-    return curr_face -> index;
-}
-
-void DCEL::sequential_locations(const std::vector <pt> &points, std::vector <int> &out)
-{
-    int n = points.size();
-    for (int i = 0; i < n; i++)
-	out[i] = sequential_locate(points[i]);
-}
-
-int DCEL::parallel_locate(const pt &point)
-{
-    assert(faces.size() > 0);
-    face* curr_face = faces[0];
-    assert(curr_face -> index >= 0);
-
-    while (true)
+    numSample = 0;
+    int step = pow(faces.size(), 4.0 / 5.0);
+    for (int i = 0; i < faces.size(); i += step)
     {
-	face* next_face = nullptr;
-	std::pair <pt, pt> ray = {curr_face -> getCentroid(), point};
-	auto edges = curr_face -> getEdges();
-	for (halfedge* e: edges)
-	{
-	    auto endpoints = e -> getEndpoints();
-	    if (pt::intersects(ray.first, ray.second, endpoints.first, endpoints.second))
-	    {
-		next_face = e -> twin -> incidentFace;
-	    }
-	}
-	if (!next_face)
-	    break;
-	curr_face = next_face;
-	if (curr_face -> index < 0)
-	    break;
+	assert(numSample < MAX_SAMPLE_SIZE);
+	samplefaces[numSample] = faces[i];
+	numSample++;
     }
-    return curr_face -> index;
-}
-
-void DCEL::parallel_locations(const std::vector <pt> &points, std::vector <int> &out)
-{
-    int n = points.size();
-    for (int i = 0; i < n; i++)
-	out[i] = parallel_locate(points[i]);
 }

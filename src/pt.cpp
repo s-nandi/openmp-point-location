@@ -67,7 +67,7 @@ ptT pt::cross(const pt &a, const pt &b)
     return a.x * b.y - a.y * b.x;
 }
 
-ptT pt::distance(const pt &a, const pt &b)
+ptT pt::distance2(const pt &a, const pt &b)
 {
     auto vec = b - a;
     return dot(vec, vec);

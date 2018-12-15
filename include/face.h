@@ -2,8 +2,8 @@
 #define FACE_H
 
 #include <vector>
+#include "pt.h"
 
-struct pt;
 struct vertex;
 struct halfedge;
 
@@ -11,6 +11,7 @@ struct face
 {
     halfedge *startEdge = nullptr;
     int index;
+    pt centroid;
 
     face(){}
     face(int index) : index(index) {}
@@ -19,7 +20,8 @@ struct face
     std::vector <vertex*> getVertices() const;
     std::vector <pt> getPoints() const;
     std::vector <face*> getNeighbors() const;
-    pt getCentroid() const;
+    
+    void initCentroid();
 };
 
 #endif

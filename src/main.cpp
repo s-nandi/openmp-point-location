@@ -100,19 +100,11 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 {
     point_set points;
     indexed_face_set faces;
-    {
-	timer stopwatch("Making mesh " + to_string(Q));
-	tie(points, faces) = make_triangular_mesh(N);
-    }
-    
-    DCEL dcel;
-    {
-	timer stopwatch("Building DCEL " + to_string(Q));
-	dcel.make_DCEL(points, faces);
-    }
+    tie(points, faces) = make_triangular_mesh(N);    
+    DCEL dcel(points, faces);
     
     auto queries = make_query_points(N, Q);
-    vector <int> sequential_located(Q), parallel_located(Q);
+    vector <int> sequential_located(Q), parallel_located(Q), hybrid_located(Q);
 
     if (debug)
     {
@@ -126,12 +118,18 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 	timer stopwatch("Sequential Point Location " + to_string(Q));
 	dcel.sequential_locations(queries, sequential_located);
     }
+    // Hybrid Location Benchmarking
+    {
+	timer stopwatch("Hybrid Point Location " + to_string(Q));
+	dcel.hybrid_locations(queries, hybrid_located);
+    }
     // Parallel Location Benchmarking
     {
 	timer stopwatch("Parallel Point Location " + to_string(Q));
 	dcel.parallel_locations(queries, parallel_located);
     }
-    assert(sequential_located == parallel_located);
+    
+    assert(sequential_located == parallel_located and sequential_located == hybrid_located);
     std::cout << std::endl;
 
     if (!checkCorrectness)
@@ -157,6 +155,6 @@ int main()
     // Check correctness once
     test(10, 10000, true);
     // Then perform benchmarks
-    for (int N: {5, 10, 20, 50, 100, 200})
-	test(N, N * N);
+    for (int N: {1000, 2000, 5000})
+	test(N, N);
 }
