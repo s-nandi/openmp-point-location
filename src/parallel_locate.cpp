@@ -27,11 +27,7 @@ face* DCEL::parallel_get_closest_face(pt &point)
         #pragma omp for reduction(reduction_min_pair : closest)
 	for (int i = 0; i < numSample; i++)
 	{
-	    if (pairs[i].first < closest.first)
-	    {
-		closest.first = pairs[i].first;
-		closest.second = pairs[i].second;
-	    }
+	    closest = pair_min(closest, pairs[i]);
 	}
     }
     

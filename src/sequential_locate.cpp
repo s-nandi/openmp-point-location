@@ -52,7 +52,7 @@ void sequential_locate_recursive(face* curr_face, pt &point, int &result)
 
 void DCEL::sequential_locate(pt &point, int &result)
 {
-    face* start_face = sequential_get_closest_face(point); // remove parallel_get_closest_face if not used
+    face* start_face = sequential_get_closest_face(point);
     sequential_locate_recursive(start_face, point, result);
 }
 

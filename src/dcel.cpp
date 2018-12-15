@@ -5,6 +5,9 @@
 #include "sort.h"
 #include <assert.h>
 
+#include <iostream>
+using namespace std;
+
 DCEL::DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles)
 {
     make_DCEL(points, triangles);
@@ -153,6 +156,7 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
 	faces[i] -> initCentroid();
     }
     numSample = 0;
+    samplefaces.resize(MAX_SAMPLE_SIZE);
     int step = pow(faces.size(), 1.0 / 3.0);
     for (int i = 0; i < faces.size(); i += step)
     {
@@ -161,4 +165,3 @@ void DCEL::buildExterior(std::vector <endpoint_indices> &twinless_edges)
 	numSample++;
     }
 }
-

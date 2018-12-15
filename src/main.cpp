@@ -100,33 +100,33 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 {
     point_set points;
     indexed_face_set faces;
-    tie(points, faces) = make_triangular_mesh(N);    
-    DCEL dcel(points, faces);
+    tie(points, faces) = make_triangular_mesh(N);
+    DCEL dcel, dcel2;
+    // Sequential Building Benchmarking
+    {
+	timer stopwatch("Sequential DCEL Building " + to_string(Q));
+	dcel.make_DCEL(points, faces);
+    }
+    // Parallel Building Benchmarking
+    {
+	timer stopwatch("Parallel DCEL Building " + to_string(Q));
+	dcel2.parallel_make_DCEL(points, faces);
+    }
     
     auto queries = make_query_points(N, Q);
-    vector <int> sequential_located(Q), parallel_located(Q), hybrid_located(Q);
-
+    std::vector <int> sequential_located(Q), parallel_located(Q), hybrid_located(Q);
     if (debug)
     {
 	std::cout << "Query points: " << std::endl;
 	for (auto &q: queries)
 	    std::cout << q << std::endl;
     }
-
+    
     // Sequental Location Benchmarking
     {
 	timer stopwatch("Sequential Point Location " + to_string(Q));
 	dcel.sequential_locations(queries, sequential_located);
-    }
-
-    if (debug)
-    {
-	for (int i = 0; i < Q; i++)
-	{
-	    std::cout << "Sequentially located" << queries[i] << " in face " << sequential_located[i] << std::endl;
-	}
-    }
-    
+    }    
     // Hybrid Location Benchmarking
     {
 	timer stopwatch("Hybrid Point Location " + to_string(Q));
@@ -149,12 +149,15 @@ void test(int N, int Q, bool checkCorrectness = false, bool debug = false)
 	    }
 	}
     }
-    
     assert(sequential_located == parallel_located and sequential_located == hybrid_located);
     std::cout << std::endl;
 
     if (!checkCorrectness)
 	return;
+
+    std::vector <int> dcel2_located(Q);
+    dcel2.hybrid_locations(queries, dcel2_located);
+    assert(sequential_located == dcel2_located);
 
     int numOutside = 0, numInside = 0;
     for (int i = 0; i < Q; i++)

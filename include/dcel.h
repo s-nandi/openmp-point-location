@@ -18,6 +18,7 @@ private:
         std::pair <int, int> indices;
         halfedge *edge;
 
+	endpoint_indices(){}
         endpoint_indices(int i, int j, halfedge* &e) : edge(e)
         {
             indices = std::minmax(i, j);
@@ -32,7 +33,7 @@ private:
     face* exterior;
 
     int numSample;
-    face* samplefaces[MAX_SAMPLE_SIZE];
+    std::vector <face*> samplefaces;
 
     vertex* getNewVertex(pt &point);
     halfedge* getNewEdge();
@@ -43,15 +44,23 @@ private:
     void matchTwinEdges(std::vector <endpoint_indices> &created_edges, std::vector <endpoint_indices> &twinless_edges);
     void buildExterior(std::vector <endpoint_indices> &twinless_edges);
 
+    void parallel_createPointSet(std::vector <pt> &points);
+    void parallel_buildFaces(std::vector <std::vector<int>> &triangles, std::vector <endpoint_indices> &created_edges);
+    void parallel_matchTwinEdges(std::vector <endpoint_indices> &created_edges, std::vector <endpoint_indices> &twinless_edges);
+    void parallel_buildExterior(std::vector <endpoint_indices> &twinless_edges);
+
     face* sequential_get_closest_face(pt &point);
     void sequential_locate(pt &point, int &result);
+    
     face* parallel_get_closest_face(pt &point);
     void parallel_locate(pt &point, int &result);
+    
     void hybrid_locate(pt &point, int &result);
 public:
     DCEL(){}
     DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     void make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
+    void parallel_make_DCEL(std::vector <pt> &points, std::vector <std::vector<int>> &triangles);
     ~DCEL();
 
     void sequential_locations(std::vector <pt> &points, std::vector <int> &out);
