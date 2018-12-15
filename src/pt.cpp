@@ -70,7 +70,7 @@ ptT pt::cross(const pt &a, const pt &b)
 ptT pt::distance(const pt &a, const pt &b)
 {
     auto vec = b - a;
-    return vec * vec;
+    return dot(vec, vec);
 }
 
 //Returns > 0 if (o, a, b) clockwise, < 0 if counter-clockwise, 0 if collinear
